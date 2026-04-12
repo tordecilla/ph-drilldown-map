@@ -1,0 +1,17 @@
+{
+  "title": "Philippines Drilldown Map",
+  "description": "An interactive map of the Philippines. Click any region to drill in.",
+  "maxDepth": "municity",
+  "geoBasePath": "./philippines-json-maps",
+  "colorField": "value",
+  "colorDomain": [0, 100],
+  "colorScheme": "interpolateBlues",
+  "detailFields": [
+    { "key": "value", "label": "Value" }
+  ],
+  "data": {
+    "region": [],
+    "province": [],
+    "municity": []
+  }
+}

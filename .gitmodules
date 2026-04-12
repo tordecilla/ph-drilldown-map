@@ -1,0 +1,3 @@
+[submodule "philippines-json-maps"]
+	path = philippines-json-maps
+	url = https://github.com/faeldon/philippines-json-maps.git

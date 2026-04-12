@@ -1,0 +1,60 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false   # handled manually below for sparse checkout
+
+      # Sparse-checkout only the ~10 MB the map actually uses.
+      # The full philippines-json-maps repo is ~1.7 GB; this avoids pulling
+      # hires files, older datasets, and everything else the map never loads.
+      - name: Sparse-checkout geo data
+        run: |
+          SUBMODULE_URL=$(git config --file .gitmodules submodule.philippines-json-maps.url)
+          SUBMODULE_SHA=$(git ls-tree HEAD philippines-json-maps | awk '{print $3}')
+
+          git clone \
+            --no-checkout \
+            --depth=1 \
+            --filter=blob:none \
+            "$SUBMODULE_URL" \
+            philippines-json-maps
+
+          git -C philippines-json-maps sparse-checkout init --cone
+          git -C philippines-json-maps sparse-checkout set \
+            2023/geojson/country/lowres \
+            2023/geojson/regions/lowres \
+            2023/geojson/provdists/lowres \
+            2023/geojson/provdists/medres
+
+          git -C philippines-json-maps fetch --depth=1 origin "$SUBMODULE_SHA"
+          git -C philippines-json-maps checkout "$SUBMODULE_SHA"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - uses: actions/deploy-pages@v4
+        id: deployment

@@ -1,0 +1,49 @@
+{
+  "_comment": "Copy this file to data.json and edit it to connect your dataset.",
+
+  "title": "My Map Title",
+  "description": "Short description shown in the welcome panel.",
+
+  "maxDepth": "municity",
+  "_maxDepth_options": [
+    "region    — click a region polygon to open the detail panel; no drill-in",
+    "province  — drill to provinces, then clicking a province opens the detail panel",
+    "municity  — full drill-through to individual cities and municipalities (default)"
+  ],
+
+  "geoBasePath": "./philippines-json-maps",
+  "_geoBasePath_note": "Path to the philippines-json-maps directory relative to this file. Default: './philippines-json-maps' (the git submodule). Override if your geo data lives elsewhere.",
+
+  "colorField": "value",
+  "_colorField_note": "The field in each data record to use for the choropleth fill color.",
+
+  "colorDomain": [0, 100],
+  "_colorDomain_note": "Min and max values for the color scale. Values outside this range are clamped.",
+
+  "colorScheme": "interpolateBlues",
+  "_colorScheme_note": "A D3 sequential interpolator. Options: interpolateBlues, interpolateGreens, interpolateOranges, interpolateReds, interpolatePurples, interpolateYlOrRd, interpolateViridis, interpolatePlasma, interpolateMagma, interpolateInferno, interpolateCool, interpolateWarm.",
+
+  "detailFields": [
+    { "key": "value",    "label": "Score" },
+    { "key": "category", "label": "Category" },
+    { "key": "notes",    "label": "Notes" }
+  ],
+  "_detailFields_note": "Fields to display in the detail panel when a user clicks an area. 'key' is the field name in your data record; 'label' is the display name shown in the panel.",
+
+  "data": {
+    "_note": "Each level is an array of records. Each record MUST have a 'psgc' field matching the PSGC code of the area. All other fields are yours to define — they are looked up by 'colorField' and 'detailFields' above.",
+
+    "region": [
+      { "psgc": 1300000000, "value": 82, "category": "High",   "notes": "National Capital Region" },
+      { "psgc": 300000000,  "value": 45, "category": "Medium", "notes": "Ilocos Region" }
+    ],
+
+    "province": [
+      { "psgc": 129800000, "value": 71, "category": "High" }
+    ],
+
+    "municity": [
+      { "psgc": 137404000, "value": 95, "category": "High", "notes": "Sample city record" }
+    ]
+  }
+}
