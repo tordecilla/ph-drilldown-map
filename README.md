@@ -184,7 +184,7 @@ Polygons with no matching data record use the default fill from the theme (dark 
 
 Every area in the Philippines has a Philippine Standard Geographic Code — a 10-digit integer. Your data records must use the same PSGC values used in the [faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps) dataset.
 
-**Quick reference for regions:**
+**Quick reference for regions (NIR alignment):**
 
 | Region | PSGC |
 |--------|------|
@@ -194,8 +194,8 @@ Every area in the Philippines has a Philippine Standard Geographic Code — a 10
 | CALABARZON (Region IV-A) | `400000000` |
 | MIMAROPA (Region IV-B) | `1700000000` |
 | Bicol Region (Region V) | `500000000` |
-| Western Visayas (Region VI) | `600000000` |
-| Central Visayas (Region VII) | `700000000` |
+| Western Visayas (Region VI) ¹ | `600000000` |
+| Central Visayas (Region VII) ² | `700000000` |
 | Eastern Visayas (Region VIII) | `800000000` |
 | Zamboanga Peninsula (Region IX) | `900000000` |
 | Northern Mindanao (Region X) | `1000000000` |
@@ -205,8 +205,12 @@ Every area in the Philippines has a Philippine Standard Geographic Code — a 10
 | CAR | `1400000000` |
 | CARAGA (Region XIII) | `1600000000` |
 | BARMM | `1900000000` |
+| **Negros Island Region (NIR)** | **`1800000000`** |
 
-For province and municipality codes, the [PSA PSGC publication](https://psa.gov.ph/classification/psgc) is the authoritative source. The GeoJSON files in `philippines-json-maps/` also embed PSGC values in their feature properties (`adm1_psgc`, `adm2_psgc`, `adm3_psgc`).
+¹ In NIR alignment, R6 excludes Negros Occidental (`604500000`).  
+² In NIR alignment, R7 excludes Negros Oriental (`704600000`) and Siquijor (`706100000`).
+
+For a full listing of province and municipality PSGCs, see `psgc-index.json`. The [PSA PSGC publication](https://psa.gov.ph/classification/psgc) is the authoritative source.
 
 ---
 
@@ -226,17 +230,76 @@ Fields where the value is `null` or missing from the record are automatically om
 
 ---
 
+## Region alignment
+
+Two map versions are provided to handle the status of the Negros Island Region (NIR):
+
+| File | Alignment | Regions |
+|------|-----------|---------|
+| `index.html` | **NIR** (default) | 18 — Negros Occidental, Negros Oriental, and Siquijor form NIR (`1800000000`) |
+| `index-no-nir.html` | Standard | 17 — Negros Occidental stays in R6, Negros Oriental and Siquijor stay in R7 |
+
+Use the file that matches your dataset's region groupings.
+
+---
+
+## PSGC developer index
+
+`psgc-index.json` lists every region, province/district, and municipality/city with its PSGC and parent hierarchy. Use it to look up codes without parsing the raw GeoJSON files.
+
+```json
+{
+  "regions": {
+    "nir":      [ { "psgc": 1800000000, "name": "Negros Island Region (NIR)" }, ... ],
+    "standard": [ { "psgc": 600000000,  "name": "Region VI (Western Visayas)" }, ... ]
+  },
+  "provinces": [
+    {
+      "psgc": 604500000, "name": "Negros Occidental", "type": "Province",
+      "region_psgc": 1800000000, "region_name": "Negros Island Region (NIR)",
+      "region_psgc_standard": 600000000, "region_name_standard": "Region VI (Western Visayas)"
+    }
+  ],
+  "municities": [
+    {
+      "psgc": 630200000, "name": "City of Bacolod", "type": "City",
+      "province_psgc": 604500000, "province_name": "Negros Occidental",
+      "region_psgc": 1800000000, "region_name": "Negros Island Region (NIR)"
+    }
+  ]
+}
+```
+
+- `region_psgc` uses the NIR alignment (matches `index.html`)
+- The 3 NIR provinces carry `region_psgc_standard` / `region_name_standard` for the old alignment
+- HUC cities are listed under their geographic parent province PSGC
+- NCR municipalities are listed under their district PSGCs
+
+To regenerate after a submodule update: `node scripts/build-psgc-index.js`
+
+---
+
 ## File structure
 
 ```
-index.html                       — self-contained application (HTML + CSS + JS)
-data.json                      — your config and dataset; edit this
-data.example.json              — fully annotated schema reference
-philippines-json-maps/         — geo data git submodule (faeldon/philippines-json-maps)
-.github/workflows/pages.yml    — GitHub Actions workflow for Pages deployment
+index.html                       — NIR alignment map (default)
+index-no-nir.html                — standard 17-region alignment map
+data.json                        — your config and dataset; edit this
+data.example.json                — fully annotated schema reference
+psgc-index.json                  — PSGC lookup index for all regions, provinces, and municipalities
+geo-nir/                         — GeoJSON overrides for the NIR alignment
+  country.0.001.json             —   18-region national view
+  provdists-region-1800000000…   —   NIR province drilldown
+  provdists-region-600000000…    —   R6 minus Negros Occidental
+  provdists-region-700000000…    —   R7 minus Negros Oriental + Siquijor
+scripts/
+  build-nir-geo.js               — regenerates geo-nir/ (requires mapshaper)
+  build-psgc-index.js            — regenerates psgc-index.json
+philippines-json-maps/           — geo data git submodule (faeldon/philippines-json-maps)
+.github/workflows/pages.yml      — GitHub Actions workflow for Pages deployment
 ```
 
-`index.html` has no build dependencies beyond the D3 CDN. To deploy, copy `index.html`, `data.json`, and the `philippines-json-maps/` directory to any static file host.
+`index.html` has no build dependencies beyond the D3 CDN. To deploy, copy `index.html` (and/or `index-no-nir.html`), `data.json`, `huc-boundaries.json`, the `geo-nir/` directory, and the `philippines-json-maps/` submodule to any static file host.
 
 ---
 
