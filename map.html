@@ -479,7 +479,7 @@ async function ensureNational() {
   if (nationalFeatures.length) return;
   const [countryData, hucData] = await Promise.all([
     d3.json(`${GEO_BASE}/2023/geojson/country/lowres/country.0.001.json${GEO_VER}`),
-    d3.json(`${GEO_BASE}/huc-boundaries.json${GEO_VER}`).catch(() => ({ features: [] })),
+    d3.json(`./huc-boundaries.json${GEO_VER}`).catch(() => ({ features: [] })),
   ]);
   nationalFeatures = countryData.features;
   nationalPath = makePathFn(LON_MIN, LON_MAX, LAT_MIN, LAT_MAX);
