@@ -24,7 +24,7 @@ The workflow does a sparse checkout of only the ~10 MB of geo files the map actu
 git clone <this-repo>
 git submodule update --init   # pulls geo data (~1.7 GB, one-time)
 python -m http.server 8080
-# open http://localhost:8080/map.html
+# open http://localhost:8080/index.html
 ```
 
 Browsers block `fetch()` from `file://` URLs, so a local HTTP server is required. Any static file server works — Python's is the simplest.
@@ -33,7 +33,7 @@ Browsers block `fetch()` from `file://` URLs, so a local HTTP server is required
 
 ## How it works
 
-1. On load, `map.html` fetches `data.json` and builds an index of your records by PSGC code
+1. On load, `index.html` fetches `data.json` and builds an index of your records by PSGC code
 2. It loads GeoJSON boundaries from the `philippines-json-maps/` submodule at runtime
 3. Polygons with a matching data record are filled using your color scale; unmatched polygons use the default theme color
 4. Clicking a polygon either drills deeper or opens the detail panel, depending on `maxDepth`
@@ -229,11 +229,11 @@ Fields where the value is `null` or missing from the record are automatically om
 ## File structure
 
 ```
-map.html                       — self-contained application (HTML + CSS + JS)
+index.html                       — self-contained application (HTML + CSS + JS)
 data.json                      — your config and dataset; edit this
 data.example.json              — fully annotated schema reference
 philippines-json-maps/         — geo data git submodule (faeldon/philippines-json-maps)
 .github/workflows/pages.yml    — GitHub Actions workflow for Pages deployment
 ```
 
-`map.html` has no build dependencies beyond the D3 CDN. To deploy, copy `map.html`, `data.json`, and the `philippines-json-maps/` directory to any static file host.
+`index.html` has no build dependencies beyond the D3 CDN. To deploy, copy `index.html`, `data.json`, and the `philippines-json-maps/` directory to any static file host.
