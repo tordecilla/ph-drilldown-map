@@ -478,7 +478,7 @@ async function restoreFromHash(hash) {
 async function ensureNational() {
   if (nationalFeatures.length) return;
   const [countryData, hucData] = await Promise.all([
-    d3.json(`./geo-nir/country.0.001.json${GEO_VER}`),
+    d3.json(`${GEO_BASE}/2023/geojson/country/lowres/country.0.001.json${GEO_VER}`),
     d3.json(`./huc-boundaries.json${GEO_VER}`).catch(() => ({ features: [] })),
   ]);
   nationalFeatures = countryData.features;
@@ -667,12 +667,7 @@ function drillRegion(regionFeature, skipAnimation, afterRender) {
       loadAndRender(munFeatures, 'adm3_en', [regionFeature]);
     }).catch(err => { status.textContent = 'Error: ' + err; currentView = 'national'; });
   } else {
-    // R6, R7, and NIR (1800000000) use geo-nir/ overrides in the NIR alignment
-    const NIR_REGION_OVERRIDES = new Set([600000000, 700000000, 1800000000]);
-    const regionFileURL = NIR_REGION_OVERRIDES.has(psgc)
-      ? `./geo-nir/provdists-region-${psgc}.0.001.json${GEO_VER}`
-      : `${GEO_BASE}/2023/geojson/regions/lowres/provdists-region-${psgc}.0.001.json${GEO_VER}`;
-    d3.json(regionFileURL)
+    d3.json(`${GEO_BASE}/2023/geojson/regions/lowres/provdists-region-${psgc}.0.001.json${GEO_VER}`)
       .then(data => loadAndRender(data.features, 'adm2_en'))
       .catch(err => { status.textContent = 'Error: ' + err; currentView = 'national'; });
   }
