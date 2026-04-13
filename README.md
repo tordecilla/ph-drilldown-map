@@ -305,8 +305,8 @@ philippines-json-maps/           — geo data git submodule (faeldon/philippines
 
 ## Credits
 
-All geographic boundary data is sourced from **[faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps)** by [Ralph Faeldon](https://github.com/faeldon) — a comprehensive collection of Philippine administrative boundary GeoJSON files covering regions, provinces, and municipalities.
+All geographic boundary data is sourced from **[faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps)** by [James Faeldon](https://github.com/faeldon) — a comprehensive collection of Philippine administrative boundary GeoJSON files covering regions, provinces, and municipalities.
 
-That work is itself built on **[altcoder/philippines-psgc-shapefiles](https://github.com/altcoder/philippines-psgc-shapefiles)**, which provides the high-resolution PSGC administrative boundary shapefiles that serve as the original source. Both are maintained by Ralph Faeldon.
+That work is itself built on **[altcoder/philippines-psgc-shapefiles](https://github.com/altcoder/philippines-psgc-shapefiles)**, which provides the high-resolution PSGC administrative boundary shapefiles that serve as the original source. Both are maintained by James Faeldon.
 
 This project would not be possible without that work.
