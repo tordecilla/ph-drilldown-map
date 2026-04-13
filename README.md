@@ -237,3 +237,13 @@ philippines-json-maps/         — geo data git submodule (faeldon/philippines-j
 ```
 
 `index.html` has no build dependencies beyond the D3 CDN. To deploy, copy `index.html`, `data.json`, and the `philippines-json-maps/` directory to any static file host.
+
+---
+
+## Credits
+
+All geographic boundary data is sourced from **[faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps)** by [Ralph Faeldon](https://github.com/faeldon) — a comprehensive collection of Philippine administrative boundary GeoJSON files covering regions, provinces, and municipalities.
+
+That work is itself built on **[altcoder/philippines-psgc-shapefiles](https://github.com/altcoder/philippines-psgc-shapefiles)**, which provides the high-resolution PSGC administrative boundary shapefiles that serve as the original source. Both are maintained by Ralph Faeldon.
+
+This project would not be possible without that work.
